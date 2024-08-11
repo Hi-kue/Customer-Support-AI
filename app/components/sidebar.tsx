@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/app/components/ui/button";
 import { Message } from "ai/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
