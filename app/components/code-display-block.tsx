@@ -6,12 +6,7 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
 
-interface ButtonCodeblockProps {
-  code: string;
-  lang: string;
-}
-
-export default function CodeDisplayBlock({ code, lang }: ButtonCodeblockProps) {
+export default function CodeDisplayBlock({ code, lang }) {
   const [isCopied, setisCopied] = React.useState(false);
   const { theme } = useTheme();
 
