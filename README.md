@@ -57,7 +57,7 @@ To be able to run the application, you should have the following installed on yo
 
 Firstly, clone the repository:
 ```bash
-git clone <repo-url> .
+git clone https://github.com/NautilusAI/Customer-Support-AI.git .
 ```
 
 > **NOTE**: The `.` at the end of the command clones the repository into the current directory, rather than creating a new directory with the name of this repo.
