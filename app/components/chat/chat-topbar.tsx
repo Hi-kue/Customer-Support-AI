@@ -5,32 +5,32 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/app/components/ui/popover";
 import { Button } from "../ui/button";
 import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Sidebar } from "../sidebar";
 import { Message } from "ai/react";
-import { getSelectedModel } from "@/lib/model-helper";
+// import { getSelectedModel } from "@/lib/model-helper";
 
-interface ChatTopbarProps {
+interface ChatTopBarProps {
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
   chatId?: string;
   messages: Message[];
 }
 
-export default function ChatTopbar({
+export default function ChatTopBar({
   setSelectedModel,
   isLoading,
   chatId,
   messages,
-}: ChatTopbarProps) {
+}: ChatTopBarProps) {
   const [models, setModels] = React.useState<string[]>(["Browser Model", "REST API", "gemma:2b"]);
   const [open, setOpen] = React.useState(false);
   const [currentModel, setCurrentModel] = React.useState<string>();
 
   useEffect(() => {
-    setCurrentModel(getSelectedModel());
+    // setCurrentModel(getSelectedModel());
 
     const env = process.env.NODE_ENV;
 
