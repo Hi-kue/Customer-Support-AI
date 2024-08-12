@@ -11,204 +11,106 @@ import {
 } from "@/app/components/ui/dialog";
 import { Input } from "@/app/components/ui/input";
 import UsernameForm from "@/app/components/username-form";
-// import Gamma from "@/lib/gamma"; // TODO: Implement this .ts File
-// import { getSelectedModel } from "@/lib/model-helper"; // TODO: Implement this .ts File
-// import { AIMessage, HumanMessage } from "@langchain/core/messages"; // TODO: Implement this .ts File
-// import { BytesOutputParser } from "@langchain/core/output_parsers"; // TODO: Implement this .ts File
 import { ChatRequestOptions } from "ai";
 import { Message, useChat } from "ai/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 export default function Home() {
-	// const {
-	// 	messages,
-	// 	input,
-	// 	handleInputChange,
-	// 	setInput,
-	// 	handleSubmit,
-	// 	isLoading,
-	// 	error,
-	// 	stop,
-	// 	setMessages,
-	// } = useChat({
-	// 	onResponse: (response) => {
-	// 		if (response) {
-	// 			setLoadingSubmit(false);
-	// 		}
-	// 	},
-	// 	onError: (error) => {
-	// 		setLoadingSubmit(false);
-	// 		toast.error("An error occurred. Please try again.");
-	// 	},
-	// });
-	// const [chatId, setChatId] = React.useState<string>("");
-	// // const [selectedModel, setSelectedModel] = React.useState<string>(
-	// // 	getSelectedModel()
-	// // );
-	// const [open, setOpen] = React.useState(false);
-	// // const [gamma, setGamma] = React.useState<Gamma | null>(null);
-	// // const [ollama, setOllama] = useState<ChatOllama>();
-	// const env = process.env.NODE_ENV;
-	// const [loadingSubmit, setLoadingSubmit] = React.useState(false);
+	const {
+		messages,
+		input,
+		handleInputChange,
+		setInput,
+		handleSubmit,
+		isLoading,
+		error,
+		stop,
+		setMessages,
+	} = useChat({
+		onResponse: (response) => {
+			if (response) {
+				setLoadingSubmit(false);
+			}
+		},
+		onError: (error) => {
+			setLoadingSubmit(false);
+			toast.error("An error occurred. Please try again.");
+		},
+	});
 
-	// React.useEffect(() => {
-	// 	if (!isLoading && !error && chatId && messages.length > 0) {
-	// 		if (typeof window !== "undefined") {
-	// 			// NOTE: Save the Message to Local Storage
-	// 			localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
-	// 		}
-	// 		// NOTE: Trigger Storage Event To Update ChatList
-	// 		window.dispatchEvent(new Event("storage"));
-	// 	}
-	// }, [messages, chatId, isLoading, error]);
+	const [chatId, setChatId] = React.useState<string>("");
+	const [open, setOpen] = React.useState(false);
+	const env = process.env.NODE_ENV;
+	const [loadingSubmit, setLoadingSubmit] = React.useState(false);
 
-	// useEffect(() => {
-	// 	if (env === "production") {
-	// 		const newOllama = new ChatOllama({
-	// 			baseUrl: "http://localhost:11434",
-	// 			model: selectedModel,
-	// 		});
-	// 		setOllama(newOllama);
-	// 	}
+	React.useEffect(() => {
+		if (!isLoading && !error && chatId && messages.length > 0) {
+			if(typeof window !== "undefined") {
+				localStorage.setIem(`chat_${chatId}`, JSON.stringify(messages));
+			}
 
-	// 	console.log("selectedModel:", selectedModel);
-	// 	if (!localStorage.getItem("ollama_user")) {
-	// 		setOpen(true);
-	// 	}
-	// }, [selectedModel]);
+			window.dispatchEvent(new Event("storage"));
+		}
+	}, [messages, chatId, isLoading, error]);
 
-	// useEffect(() => {
-	// 	if (selectedModel === "Browser Model") {
-	// 		console.log("Selected model: Browser");
-	// 		const gammaInstance = Gamma.getInstance();
-	// 		setGamma(gammaInstance);
-	// 	}
-	// }, [setSelectedModel, selectedModel]);
+	const addMessage = (Message: any) => {
+		console.log("addMessage:", Message);
+		messages.push(Message);
+		window.dispatchEvent(new Event("storage"));
+		setMessages([...messages]);
+	};
 
-	// const addMessage = (Message: any) => {
-	// 	console.log("addMessage:", Message);
-	// 	messages.push(Message);
-	// 	window.dispatchEvent(new Event("storage"));
-	// 	setMessages([...messages]);
-	// };
+	const handleSubmitOpenAI = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 
-	// // Function to handle chatting with Ollama in production (client side)
-	// const handleSubmitProduction = async (
-	// 	e: React.FormEvent<HTMLFormElement>
-	// ) => {
-	// 	e.preventDefault();
+		addMessage({ role: "user", content: input, id: chatId });
+		setInput("");
 
-	// 	addMessage({ role: "user", content: input, id: chatId });
-	// 	setInput("");
+		try {
+			const response = await axios.post("/api/openai", {
+				messages: messages.map((m) => ({
+					role: m.role,
+					content: m.content,
+				})),
+			});
 
-	// 	if (ollama) {
-	// 		try {
-	// 			const parser = new BytesOutputParser();
+			const responseMessage = response.data.choices[0].message.content;
+			setMessages([
+				...messages,
+				{ role: "assistant", content: responseMessage, id: chatId },
+			]);
+			setLoadingSubmit(false);
+		} catch (error) {
+			toast.error("An error occurred. Please try again.");
+			setLoadingSubmit(false);
+		}
+	};
 
-	// 			console.log(messages);
-	// 			const stream = await ollama
-	// 				.pipe(parser)
-	// 				.stream(
-	// 					(messages as Message[]).map((m) =>
-	// 						m.role == "user"
-	// 							? new HumanMessage(m.content)
-	// 							: new AIMessage(m.content)
-	// 					)
-	// 				);
+	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setLoadingSubmit(true);
 
-	// 			const decoder = new TextDecoder();
+		if (messages.length === 0) {
+			// Note: Generates a Random UUID for ChatId
+			console.log("Generating chat id");
+			const id = uuidv4();
+			setChatId(id);
+		}
 
-	// 			let responseMessage = "";
-	// 			for await (const chunk of stream) {
-	// 				const decodedChunk = decoder.decode(chunk);
-	// 				responseMessage += decodedChunk;
-	// 			}
-	// 			setMessages([
-	// 				...messages,
-	// 				{ role: "assistant", content: responseMessage, id: chatId },
-	// 			]);
-	// 			setLoadingSubmit(false);
-	// 		} catch (error) {
-	// 			toast.error("An error occurred. Please try again.");
-	// 			setLoadingSubmit(false);
-	// 		}
-	// 	}
-	// };
+		setMessages([...messages]);
 
-	// const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-	// 	e.preventDefault();
-	// 	setLoadingSubmit(true);
-
-	// 	if (messages.length === 0) {
-	// 		// Generate a random id for the chat
-	// 		console.log("Generating chat id");
-	// 		const id = uuidv4();
-	// 		setChatId(id);
-	// 	}
-
-	// 	if (selectedModel === "Browser Model") {
-	// 		try {
-	// 			// Add the user message to the chat
-	// 			addMessage({ role: "user", content: input, id: chatId });
-	// 			setInput("");
-
-	// 			if (gamma === null) {
-	// 				const gammaInstance = Gamma.getInstance();
-	// 				setGamma(gammaInstance);
-	// 			}
-
-	// 			// Generate a response
-	// 			const responseGenerator = gamma
-	// 				? await gamma.summarize(input)
-	// 				: (async function* () {})();
-	// 			console.log("Response from Browser Model:", responseGenerator);
-
-	// 			let responseMessage = "";
-	// 			// Display response chunks as they arrive and append them to the message
-	// 			for await (const chunk of responseGenerator) {
-	// 				responseMessage += chunk;
-
-	// 				window.dispatchEvent(new Event("storage"));
-	// 				setMessages([
-	// 					...messages,
-	// 					{ role: "assistant", content: responseMessage, id: chatId },
-	// 				]);
-	// 				setLoadingSubmit(false);
-	// 			}
-	// 		} catch (error) {
-	// 			console.error("Error processing message with Browser Model:", error);
-	// 		}
-	// 	} else {
-	// 		setMessages([...messages]);
-
-	// 		// Prepare the options object with additional body data, to pass the model.
-	// 		const requestOptions: ChatRequestOptions = {
-	// 			options: {
-	// 				body: {
-	// 					selectedModel: selectedModel,
-	// 				},
-	// 			},
-	// 		};
-
-	// 		if (env === "production" && selectedModel !== "REST API") {
-	// 			handleSubmitProduction(e);
-	// 		} else {
-	// 			// use the /api/chat route
-	// 			// Call the handleSubmit function with the options
-	// 			handleSubmit(e, requestOptions);
-	// 		}
-	// 	}
-	// };
+		handleSubmitOpenAI(e);
+	};
 
 	return (
 		<main className="flex h-[calc(100dvh)] flex-col items-center ">
 			<Dialog open={open} onOpenChange={setOpen}>
 				<ChatLayout
 					chatId={chatId}
-					setSelectedModel={setSelectedModel}
 					messages={messages}
 					input={input}
 					handleInputChange={handleInputChange}
@@ -222,9 +124,9 @@ export default function Home() {
 				/>
 				<DialogContent className="flex flex-col space-y-4">
 					<DialogHeader className="space-y-2">
-						<DialogTitle>Welcome to Ollama!</DialogTitle>
+						<DialogTitle>Welcome to Customer Support AI!</DialogTitle>
 						<DialogDescription>
-							Enter your name to get started. This is just to personalize your
+							Enter your name to get started; This is just to personalize your
 							experience.
 						</DialogDescription>
 						<UsernameForm setOpen={setOpen} />

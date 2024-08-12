@@ -35,7 +35,7 @@ export default function UserSettings() {
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const username = localStorage.getItem("ollama_user");
+      const username = localStorage.getItem("ai_user");
       if (username) {
         setName(username);
         setIsLoading(false);
@@ -43,17 +43,17 @@ export default function UserSettings() {
     };
 
     const fetchData = () => {
-      const username = localStorage.getItem("ollama_user");
+      const username = localStorage.getItem("ai_user");
       if (username) {
         setName(username);
         setIsLoading(false);
       }
     };
 
-    // Initial fetch
+    // NOTE: Initial Fetch for Data
     fetchData();
 
-    // Listen for storage changes
+    // NOTE: Listening to Any Storage Changes
     window.addEventListener("storage", handleStorageChange);
 
     return () => {

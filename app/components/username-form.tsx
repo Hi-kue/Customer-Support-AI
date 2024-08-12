@@ -18,7 +18,7 @@ import React from "react"
 
 const formSchema = z.object({
     username: z.string().min(2, {
-        message: "Name must be at least 2 characters.",
+        message: "NAME MUST BE ATLEAST 2 CHARACTERS LONG.",
       }),
 })
 
@@ -37,7 +37,7 @@ export default function UsernameForm({ setOpen }: UsernameFormProps) {
 
       function onSubmit(values: z.infer<typeof formSchema>) {
         if (typeof window !== 'undefined') {
-          localStorage.setItem("ollama_user", values.username)
+          localStorage.setItem("user_cred", values.username)
         }
         window.dispatchEvent(new Event("storage"));
         setOpen(false)
@@ -53,10 +53,10 @@ export default function UsernameForm({ setOpen }: UsernameFormProps) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your name" {...field} />
+                <Input placeholder="Enter Your Name Here..." {...field} />
               </FormControl>
               <FormDescription>
-                This won&apos;t be public. It&apos;s just for you.
+                This won&apos;t be public, It&apos;s just for you.
               </FormDescription>
               <FormMessage />
             </FormItem>

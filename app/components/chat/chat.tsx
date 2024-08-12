@@ -9,7 +9,6 @@ import { ChatRequestOptions } from "ai";
 
 export interface ChatProps {
 	chatId?: string;
-	setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
 	messages: Message[];
 	input: string;
 	handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -31,7 +30,6 @@ export default function Chat({
 	isLoading,
 	error,
 	stop,
-	setSelectedModel,
 	chatId,
 	loadingSubmit,
 }: ChatProps) {
@@ -41,14 +39,12 @@ export default function Chat({
 	return (
 		<div className="flex flex-col justify-between w-full h-full  ">
 			<ChatTopBar
-				setSelectedModel={setSelectedModel}
 				isLoading={isLoading}
 				chatId={chatId}
 				messages={messages}
 			/>
 
 			<ChatList
-				setSelectedModel={setSelectedModel}
 				messages={messages}
 				input={input}
 				handleInputChange={handleInputChange}
@@ -60,7 +56,6 @@ export default function Chat({
 			/>
 
 			<ChatBottomBar
-				setSelectedModel={setSelectedModel}
 				messages={messages}
 				input={input}
 				handleInputChange={handleInputChange}

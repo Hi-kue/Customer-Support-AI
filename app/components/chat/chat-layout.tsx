@@ -35,7 +35,6 @@ export function ChatLayout({
 	error,
 	stop,
 	chatId,
-	setSelectedModel,
 }: MergedProps) {
 	const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
 	const [isMobile, setIsMobile] = useState(false);
@@ -98,7 +97,6 @@ export function ChatLayout({
 			<ResizablePanel className="h-full" defaultSize={defaultLayout[1]}>
 				<Chat
 					chatId={chatId}
-					setSelectedModel={setSelectedModel}
 					messages={messages}
 					input={input}
 					handleInputChange={handleInputChange}

@@ -6,8 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChatProps } from "./chat";
 import Image from "next/image";
 import CodeDisplayBlock from "../code-display-block";
-import { experimental_AssistantResponse } from "ai";
 import { marked } from "marked";
+import { useTheme } from "next-themes";
 
 export default function ChatList({
 	messages,
@@ -19,6 +19,7 @@ export default function ChatList({
 	stop,
 	loadingSubmit,
 }: ChatProps) {
+	const { theme } = useTheme();
 	const bottomRef = useRef<HTMLDivElement>(null);
 	const [name, setName] = React.useState<string>("");
 	const [localStorageIsLoading, setLocalStorageIsLoading] =
@@ -33,7 +34,7 @@ export default function ChatList({
 	}, [messages]);
 
 	useEffect(() => {
-		const username = localStorage.getItem("ollama_user");
+		const username = localStorage.getItem("ai_user");
 		if (username) {
 			setName(username);
 			setLocalStorageIsLoading(false);
@@ -45,14 +46,18 @@ export default function ChatList({
 			<div className="w-full h-full flex justify-center items-center">
 				<div className="flex flex-col gap-4 items-center">
 					<Image
-						src="/" // TODO: Change Image
-						alt="AI"
+						src={
+							theme === "dark"
+								?  "/imgs/nautilus-cs-ai-logo-white.png"
+								: "/imgs/nautilus-cs-ai-logo-black.png"
+						}
+						alt="Customer Service AI Logo"
 						width={60}
 						height={60}
-						className="h-20 w-14 object-contain dark:invert"
+						className= "h-20 w-14 object-contain"
 					/>
 					<p className="text-center text-lg text-muted-foreground">
-						How can I help you today?
+						How Can I Assist You Today?
 					</p>
 				</div>
 			</div>
@@ -88,10 +93,6 @@ export default function ChatList({
 						<div className="flex gap-3 items-center">
 							{message.role === "user" && (
 								<div className="flex items-end gap-3">
-									{/* <span className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
-                    {(message.content)}
-                  </span> */}
-
 									<span
 										className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto"
 										dangerouslySetInnerHTML={{
@@ -101,7 +102,7 @@ export default function ChatList({
 
 									<Avatar className="flex justify-start items-center overflow-hidden">
 										<AvatarImage
-											src="/"
+											src="#"
 											alt="user"
 											width={6}
 											height={6}
@@ -117,7 +118,7 @@ export default function ChatList({
 								<div className="flex items-end gap-2">
 									<Avatar className="flex justify-start items-center">
 										<AvatarImage
-											src="/ollama.png"
+											src="#"
 											alt="AI"
 											width={6}
 											height={6}
@@ -125,7 +126,7 @@ export default function ChatList({
 										/>
 									</Avatar>
 									<span className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
-										{/* Check if the message content contains a code block */}
+										{/* NOTE: Check if Message Content Contains a Code Block */}
 										{message.content.split("```").map((part, index) => {
 											if (index % 2 === 0) {
 												return (
@@ -160,7 +161,7 @@ export default function ChatList({
 					<div className="flex pl-4 pb-4 gap-2 items-center">
 						<Avatar className="flex justify-start items-center">
 							<AvatarImage
-								src="/" // TODO: Change Image
+								src="/"
 								alt="AI"
 								width={6}
 								height={6}
