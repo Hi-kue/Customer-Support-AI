@@ -1,10 +1,11 @@
 export const data = {
     template: {
-        model: "", // TODO: Define model
-        prompt: "", // TODO: Define prompt
-        max_tokens: "", // TODO: Define max_tokens
-        temperature: 0, // TODO: Define temperature
-        top_p: 1, // TODO: Define top_p
-        frequency_penalty: 0, // TODO: Define frequency_penalty
+        model: "", // NOTE: Model used to Generate Response to User Prompt
+        prompt: "", // NOTE: User Prompt for AI
+        max_tokens: "", // NOTE: Adjust Tokens for Creativity
+        temperature: 0, // NOTE: Adjust Temperature for Creativity
+        top_p: 0, // NOTE: Use Nuclear Sampling, Range 0 - 1
+        frequency_penalty: 0, // NOTE: Penalty Range 0 - 1, no Penalty
+        presence_penalty: 0, // NOTE: Penalty Range 0 - 1, no Penalty
     },
 }

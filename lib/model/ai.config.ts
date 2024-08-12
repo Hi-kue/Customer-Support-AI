@@ -6,18 +6,25 @@ const openAI: OpenAI = new OpenAI({
 
 
 // TODO: Implement the Initial Response for the AI.
-const initialPrompt: string = ``;
+const initialPrompt: string = `
+    
+`;
 
 
-export default async function getAIResponse(model, prompt, role, maxTokens) {
+export default async function getAIResponse(
+    model: string,
+    prompt: string,
+    role: string,
+    maxTokens: number = 150) {
     const response: any = await openAI.completions.create({
         model: model,
         prompt: prompt,
         max_tokens: maxTokens,
-        temperature: 0, // TODO: Define temperature
-        top_p: 1, // TODO: Define top_p
-        frequency_penalty: 0, // TODO: Define frequency_penalty
+        temperature: 0, // NOTE: Adjust Temperature for Creativity
+        top_p: 1, // NOTE: Use Nuclear Sampling
+        frequency_penalty: 0, // NOTE: Penalty Range 0 - 1, no Penalty
+        presence_penalty: 0, // NOTE: Penalty Range 0 - 1, no Penalty
     })
 
-    return response.choices[0].message.text;
+    return response.choices[0].message.text.trim();
 }
