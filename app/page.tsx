@@ -202,7 +202,51 @@ export default function Home() {
 			}
 		}
 	};
+//this is a component for ai
+	const [aiMessages, setAiMessages] = useState([{
+		role: 'assistant', 
+		content: "Hi!, I'm Headstarter support assistant. How can I help you today?"
+	},
+	])
+	const [userMessage, setUserMessage] = useState('')
 
+	const sendMessage = async () => {
+		setUserMessage('')
+		setAiMessages((messages) => [
+			...messages,
+			{role:'user', content: userMessage},
+			{role: 'assistant', content:''}
+		])
+
+		const response = fetch('/api/chat', {
+			method: 'POST',
+			headers:{
+				'Content-Type': 'application'
+			},
+			body: JSON.stringify([...messages, {role: 'user', content: userMessage}]),
+		}).then(async(res)=> {
+			const reader = res.body.getReader()
+			const decoder = new TextDecoder()
+
+			let result =""
+			return reader.read().then(function processText({done,value}){
+				if(done){
+					return result
+				}
+				const text = decoder.decode(value || new Uint8Array(), {stream: true})
+				setMessages((aIMessages)=> {
+					let lastMessage = aIMessages[aIMessages.length -1]
+						let otherMessages = messages.slice(0, aIMessages.length - 1) 
+						return [
+							...otherMessages,
+							{...lastMessage, content: lastMessage.content + text},
+						]
+				})
+				return reader.read().then(processText)
+			})
+	‹	})
+	}
+	//
 	return (
 		<main className="flex h-[calc(100dvh)] flex-col items-center ">
 			<Dialog open={open} onOpenChange={setOpen}>
