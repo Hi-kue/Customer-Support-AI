@@ -248,6 +248,23 @@ export default function Home() {
 	}
 	//
 	return (
+		<Box>
+				<Box>
+					<Box>
+						{aiMessages.map((message, index)=>(
+							<Box key={index} justifyContent ={ message.role === 'assistant' ? 'flex-start' : 'flex-end'}>
+								<Box>{message.content}</Box>
+							</Box>
+						))}
+					</Box>
+					<Box>
+						<Textarea label="Message" value={userMessage} onChange={(e)=> setUserMessage(e.target.value)}/>
+						<Button onClick={sendMessage}>Send</Button>
+					</Box>
+				</Box>
+			</Box>
+
+		
 		<main className="flex h-[calc(100dvh)] flex-col items-center ">
 			<Dialog open={open} onOpenChange={setOpen}>
 				<ChatLayout
