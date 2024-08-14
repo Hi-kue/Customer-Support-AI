@@ -24,27 +24,31 @@ export default function ChatTopBar({
 	messages,
 }: ChatTopBarProps) {
 	const [open, setOpen] = React.useState(false);
-
+	const [currentModel, setCurrentModel] = React.useState<string>();
 	const handleSubmitOpenAI = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		try {
-			const response = await axios.post("/api/openai", {
-				messages: messages.map((m) => ({
-					role: m.role,
-					content: m.content,
-				})),
-			});
-
-			const responseMessage = response.data.choices[0].message.content;
-			setMessages([
-				...messages,
-				{ role: "assistant", content: responseMessage, id: chatId },
-			]);
-		} catch (error) {
-			console.error("An error occurred. Please try again.");
+		if (!chatId) {
+			return;
 		}
 	};
+
+	const models: string[] = [
+		"OpenAI GPT-3",
+		"OpenAI GPT-4",
+		"Gemini (Coming Soon)",
+		"Llama (Coming Soon)",
+	]
+
+	const handleModelChange = (model: string) => {
+		setCurrentModel(model);
+
+		if (typeof window !== "undefined") {
+			localStorage.setItem("ai_model", model);
+		}
+
+		setOpen(false);
+	}
 
 	return (
 		<div className="w-full flex px-4 py-6 items-center justify-between lg:justify-center ">
@@ -57,18 +61,23 @@ export default function ChatTopBar({
 						aria-expanded={open}
 						className="w-[170px] justify-between"
 					>
-						OpenAI Chat
+						<span className="truncate">{currentModel || "Select Model"}</span>
 						<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="w-[170px] p-1">
-					<Button
-						variant="ghost"
-						className="w-full"
-						onClick={() => setOpen(false)}
-					>
-						OpenAI Chat
-					</Button>
+					{/*
+						TODO: Refactor to Make Buttons Do Something!
+					*/}
+					{models.map((model) => (
+						<Button
+							variant="ghost"
+							key={model}
+							className="w-full"
+							onClick={() => handleModelChange(model)}>
+							{model}
+						</Button>
+					))}
 				</PopoverContent>
 			</Popover>
 		</div>

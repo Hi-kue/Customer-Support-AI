@@ -1,7 +1,6 @@
 "use client";
 
 import { ChatLayout } from "@/app/components/chat/chat-layout";
-import { Button } from "@/app/components/ui/button";
 import {
 	Dialog,
 	DialogDescription,
@@ -9,11 +8,8 @@ import {
 	DialogTitle,
 	DialogContent,
 } from "@/app/components/ui/dialog";
-import { Input } from "@/app/components/ui/input";
 import UsernameForm from "@/app/components/username-form";
-import { ChatRequestOptions } from "ai";
 import { Message, useChat } from "ai/react";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
@@ -36,21 +32,21 @@ export default function Home() {
 				setLoadingSubmit(false);
 			}
 		},
-		onError: (error) => {
+		onError: (error: Error) => {
 			setLoadingSubmit(false);
 			toast.error("An error occurred. Please try again.");
 		},
 	});
-
-	const [chatId, setChatId] = React.useState<string>("");
-	const [open, setOpen] = React.useState(false);
 	const env = process.env.NODE_ENV;
+	const [chat, setChat] = useState("");
+	const [open, setOpen] = React.useState(false);
+	const [chatId, setChatId] = React.useState<string>("");
 	const [loadingSubmit, setLoadingSubmit] = React.useState(false);
 
 	React.useEffect(() => {
 		if (!isLoading && !error && chatId && messages.length > 0) {
 			if(typeof window !== "undefined") {
-				localStorage.setIem(`chat_${chatId}`, JSON.stringify(messages));
+				localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
 			}
 
 			window.dispatchEvent(new Event("storage"));
@@ -96,11 +92,10 @@ export default function Home() {
 
 		if (messages.length === 0) {
 			// Note: Generates a Random UUID for ChatId
-			console.log("Generating chat id");
+			console.log("Generating a ChatId.");
 			const id = uuidv4();
 			setChatId(id);
 		}
-
 		setMessages([...messages]);
 
 		handleSubmitOpenAI(e);

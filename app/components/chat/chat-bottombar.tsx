@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChatProps } from "./chat";
 import { Button } from "../ui/button";
 import TextareaAutosize from "react-textarea-autosize";
 import { PaperPlaneIcon, StopIcon } from "@radix-ui/react-icons";
-import { v4 as uuidv4 } from "uuid";
-
 
 export default function ChatBottomBar({
 	messages,
@@ -21,6 +18,9 @@ export default function ChatBottomBar({
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
 			handleSubmit(e);
+
+			// NOTE: Reset The Input After Submission
+			handleInputChange({ target: { value: "" } });
 		}
 	};
 
@@ -35,7 +35,7 @@ export default function ChatBottomBar({
 					value={input}
 					onChange={handleInputChange}
 					onKeyDown={handleKeyDown}
-					placeholder="Type your message..."
+					placeholder="Type Your Message Here..."
 					className="border-input max-h-20 px-5 py-4 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full border rounded-full flex items-center h-14 resize-none overflow-hidden dark:bg-card/35"
 				/>
 				<Button

@@ -33,7 +33,7 @@ export default function PullModelForm() {
   function onSubmit(data: z.infer<typeof formSchema>) {
     setIsDownloading(true);
     console.log(data);
-    // Send the model name to the server
+    // NOTE: Send the Model Name to the Server
     fetch("/api/model", {
       method: "POST",
       headers: {
@@ -42,60 +42,56 @@ export default function PullModelForm() {
       body: JSON.stringify(data),
     })
       .then((response) => {
-        // Check if response is successful
+
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Network Response was Not OK.");
         }
+
         if (!response.body) {
-          throw new Error("Something went wrong");
+          throw new Error("Something Went Wrong. Please Try Again.");
         }
-        // Create a new ReadableStream from the response body
+
         const reader = response.body.getReader();
 
-        // Read the data in chunks
         reader.read().then(function processText({ done, value }) {
           if (done) {
-            console.log("Streaming completed");
+            console.log("Streaming Completed");
             setIsDownloading(false);
             return;
           }
 
-          // Convert the chunk of data to a string
           const text = new TextDecoder().decode(value);
           console.log(text);
 
-          // Split the text into individual JSON objects
           const jsonObjects = text.trim().split("\n");
 
           jsonObjects.forEach((jsonObject) => {
             try {
               const responseJson = JSON.parse(jsonObject);
               if (responseJson.error) {
-                // Display an error toast if the response contains an error
                 toast.error("Error: " + responseJson.error);
                 setIsDownloading(false);
                 return;
               } else if (responseJson.status === "success") {
-                // Display a success toast if the response status is success
-                toast.success("Model pulled successfully");
+                toast.success("Model Pulled Successfully");
                 setIsDownloading(false);
                 return;
               }
             } catch (error) {
-              toast.error("Error parsing JSON");
+              toast.error("Error parsing JSON.");
               setIsDownloading(false);
               return;
             }
           });
 
-          // Continue reading the next chunk
+          // NOTE: Continue Reading the Chunk
           reader.read().then(processText);
         });
       })
       .catch((error) => {
         setIsDownloading(false);
-        console.error("Error pulling model:", error);
-        toast.error("Error pulling model");
+        console.error("Error Pulling Model:", error);
+        toast.error("Error Pulling Model. Please Try Again.");
       });
   }
 
@@ -113,11 +109,11 @@ export default function PullModelForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Model name</FormLabel>
+              <FormLabel>Model Name</FormLabel>
               <Input
                 {...field}
                 type="text"
-                placeholder="llama2"
+                placeholder="Enter a Model Name..."
                 value={name}
                 onChange={(e) => handleChange(e)}
               />
@@ -141,7 +137,7 @@ export default function PullModelForm() {
             {isDownloading ? (
               <div className="flex items-center gap-2">
                 <Loader2Icon className="animate-spin w-4 h-4" />
-                <span>Pulling model...</span>
+                <span>Pulling Model...</span>
               </div>
             ) : (
               "Pull model"
@@ -149,7 +145,7 @@ export default function PullModelForm() {
           </Button>
           <p className="text-xs text-center">
             {isDownloading
-              ? "This may take a while. You can safely close this modal and continue using the app"
+              ? "This may take a while. You can close this dialog and continue using the app."
               : "Pressing the button will download the specified model to your device."}
           </p>
         </div>

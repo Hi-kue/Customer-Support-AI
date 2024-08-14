@@ -3,8 +3,6 @@ import ChatTopBar from "@/app/components/chat/chat-topbar";
 import ChatList from "@/app/components/chat/chat-list";
 import ChatBottomBar from "@/app/components/chat/chat-bottombar";
 import { Message, useChat } from "ai/react";
-import { v4 as uuidv4 } from "uuid";
-import { set } from "zod";
 import { ChatRequestOptions } from "ai";
 
 export interface ChatProps {
@@ -36,8 +34,17 @@ export default function Chat({
 	const [refresh, setRefresh] = useState(false);
 	const { setMessages } = useChat();
 
+	const refreshMessages = () => {
+		setRefresh(true);
+	};
+
+	if (refresh) {
+		setMessages(messages);
+		setRefresh(false);
+	}
+
 	return (
-		<div className="flex flex-col justify-between w-full h-full  ">
+		<div className="flex flex-col justify-between w-full h-full">
 			<ChatTopBar
 				isLoading={isLoading}
 				chatId={chatId}

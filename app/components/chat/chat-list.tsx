@@ -22,8 +22,7 @@ export default function ChatList({
 	const { theme } = useTheme();
 	const bottomRef = useRef<HTMLDivElement>(null);
 	const [name, setName] = React.useState<string>("");
-	const [localStorageIsLoading, setLocalStorageIsLoading] =
-		React.useState(true);
+	const [localStorageIsLoading, setLocalStorageIsLoading] = React.useState(true);
 
 	const scrollToBottom = () => {
 		bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -54,10 +53,10 @@ export default function ChatList({
 						alt="Customer Service AI Logo"
 						width={60}
 						height={60}
-						className= "h-20 w-14 object-contain"
+						className= "h-20 w-14 object-contain dark:invert"
 					/>
 					<p className="text-center text-lg text-muted-foreground">
-						How Can I Assist You Today?
+						Hi I'm Nautilus CSAI, How Can I Assist You Today?
 					</p>
 				</div>
 			</div>
@@ -102,8 +101,8 @@ export default function ChatList({
 
 									<Avatar className="flex justify-start items-center overflow-hidden">
 										<AvatarImage
-											src="#"
-											alt="user"
+											src="/imgs/pfp-jack.png"
+											alt="User"
 											width={6}
 											height={6}
 											className="object-contain"
@@ -118,11 +117,15 @@ export default function ChatList({
 								<div className="flex items-end gap-2">
 									<Avatar className="flex justify-start items-center">
 										<AvatarImage
-											src="#"
-											alt="AI"
+											src={
+												theme === "dark" 
+												? "/imgs/nautilus-cs-ai-logo-white.png"
+												: "/imgs/nautilus-cs-ai-logo-black.png"
+											}
+											alt="Nautilus CSAI"
 											width={6}
 											height={6}
-											className="object-contain dark:invert"
+											className="object-contain"
 										/>
 									</Avatar>
 									<span className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
@@ -161,11 +164,15 @@ export default function ChatList({
 					<div className="flex pl-4 pb-4 gap-2 items-center">
 						<Avatar className="flex justify-start items-center">
 							<AvatarImage
-								src="/"
-								alt="AI"
+								src={
+									theme === "dark" 
+									? "/imgs/nautilus-cs-ai-logo-white.png"
+									: "/imgs/nautilus-cs-ai-logo-black.png"
+								}
+								alt="Nautilus CSAI"
 								width={6}
 								height={6}
-								className="object-contain dark:invert"
+								className="object-contain"
 							/>
 						</Avatar>
 						<div className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">

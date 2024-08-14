@@ -32,7 +32,7 @@ export default function EditUsernameForm({ setOpen }: EditUsernameFormProps) {
 	const [name, setName] = useState("");
 
 	useEffect(() => {
-		setName(localStorage.getItem("ollama_user") || "Anonymous");
+		setName(localStorage.getItem("user_cred") || "Anonymous");
 	}, []);
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -43,9 +43,9 @@ export default function EditUsernameForm({ setOpen }: EditUsernameFormProps) {
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		localStorage.setItem("ollama_user", values.username);
+		localStorage.setItem("user_cred", values.username);
 		window.dispatchEvent(new Event("storage"));
-		toast.success("Name updated successfully");
+		toast.success("Name Set Successfully.");
 	}
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

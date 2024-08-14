@@ -12,7 +12,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -21,10 +20,7 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { GearIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
-import { set } from "zod";
-import UsernameForm from "./username-form";
 import EditUsernameForm from "./edit-username-form";
 import PullModel from "./pull-model";
 
@@ -35,7 +31,7 @@ export default function UserSettings() {
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const username = localStorage.getItem("ai_user");
+      const username = localStorage.getItem("user_cred");
       if (username) {
         setName(username);
         setIsLoading(false);
@@ -43,7 +39,7 @@ export default function UserSettings() {
     };
 
     const fetchData = () => {
-      const username = localStorage.getItem("ai_user");
+      const username = localStorage.getItem("user_cred");
       if (username) {
         setName(username);
         setIsLoading(false);
@@ -70,8 +66,8 @@ export default function UserSettings() {
         >
           <Avatar className="flex justify-start items-center overflow-hidden">
             <AvatarImage
-              src=""
-              alt="AI"
+              src="/"
+              alt="Nautilus CSAI"
               width={4}
               height={4}
               className="object-contain"

@@ -1,1 +1,5 @@
-// TODO: Complete this .ts File
+export async function POST(request: Request) {
+    const { name } = await request.json();
+
+    
+}
