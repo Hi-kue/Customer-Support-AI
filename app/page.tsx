@@ -1,5 +1,5 @@
 "use client";
-
+//testing
 import { ChatLayout } from "@/app/components/chat/chat-layout";
 import {
 	Dialog,
@@ -102,6 +102,8 @@ export default function Home() {
 	};
 
 	return (
+	
+		
 		<main className="flex h-[calc(100dvh)] flex-col items-center ">
 			<Dialog open={open} onOpenChange={setOpen}>
 				<ChatLayout
